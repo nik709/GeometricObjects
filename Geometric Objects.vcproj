@@ -297,6 +297,10 @@
 				RelativePath=".\THeadList.h"
 				>
 			</File>
+			<File
+				RelativePath=".\TStack.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Файлы ресурсов"

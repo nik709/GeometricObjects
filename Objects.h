@@ -1,9 +1,9 @@
 #pragma once
 
 #include "THeadList.h"
+#include "TStack.h"
 namespace GeometricObjects 
 {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -64,6 +64,10 @@ namespace GeometricObjects
 			y+=_y;
 			Draw(gr);
 		}
+		int GetX(Graphics ^gr) 
+		{return x;}
+		int GetY(Graphics ^gr) 
+		{return y;}
 	};
 
 	//----------------------------------------------------------------------------
@@ -179,6 +183,100 @@ namespace GeometricObjects
 		void AddObject(TObject *object)
 		{
 			list.InsLast(object);
+		}
+	};
+
+
+	//----------------------------------------------------------------------------
+	class TChart;
+	struct TChartLine
+	{
+		TChart *pLine;
+		TPoint *pFp, *pLp;
+	};
+	//----------------------------------------------------------------------------
+	class TChart : public TObject
+	{
+	protected:
+		TObject *begin, *end;
+		Tstack <TChartLine> st;
+	public:
+		TObject *GetFirst()
+		{
+			return begin;
+		}
+		TObject *GetLast()
+		{
+			return end;
+		}
+		void SetFirst(TObject *obj)
+		{
+			begin = obj;
+		}
+		void SetLast(TObject *obj)
+		{
+			end = obj;
+		}
+		TChart (TPoint *point1, TPoint *point2)
+		{
+			SetFirst(point1);
+			SetLast(point2);
+		}
+		~TChart() {}
+		virtual void Draw(Graphics ^gr)
+		{
+			TPoint *q;
+			TObject *t;
+			TChartLine CurrLine;
+			st.clear();
+			CurrLine.pLine = this;
+			CurrLine.pFp = NULL;
+			CurrLine.pLp = NULL;
+			st.Push(CurrLine);
+			while (!st.IsEmpty())
+			{
+				CurrLine = st.Pop();
+				while (CurrLine.pFp == NULL)
+				{
+					t = this->GetFirst();
+					q = dynamic_cast <TPoint*> (t);
+					if (q!=NULL)
+						CurrLine.pFp = q;
+					else
+					{
+						st.Push(CurrLine);
+						CurrLine.pLine = dynamic_cast <TChart*> (t);
+					}
+				}
+				if (CurrLine.pLp == NULL)
+				{
+					t=this->GetLast();
+					q = dynamic_cast <TPoint*> (t);
+					if (q!=NULL)
+						CurrLine.pLp = q;
+					else
+					{
+						st.Push(CurrLine);
+						CurrLine.pLine = dynamic_cast <TChart*> (t);
+						CurrLine.pFp = NULL;
+						st.Push(CurrLine);
+					}
+				}
+				if ((CurrLine.pFp!=NULL) && (CurrLine.pLp!=NULL))
+				{
+					gr->DrawLine(Pens::Black, CurrLine.pFp->GetX(gr), CurrLine.pFp->GetY(gr), CurrLine.pLp->GetX(gr), CurrLine.pLp->GetY(gr));
+					if (!st.IsEmpty())
+					{
+						q = CurrLine.pLp;
+						CurrLine = st.Pop();
+						if (CurrLine.pFp == NULL)
+							CurrLine.pFp = q;
+						else
+							CurrLine.pLp = q;
+						st.Push(CurrLine);
+					}
+				}
+			}
 		}
 	};
 }
