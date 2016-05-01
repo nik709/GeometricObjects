@@ -86,7 +86,7 @@ namespace GeometricObjects {
 			// 
 			this->button1->Location = System::Drawing::Point(13, 124);
 			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
+			this->button1->Size = System::Drawing::Size(93, 23);
 			this->button1->TabIndex = 0;
 			this->button1->Text = L"button1";
 			this->button1->UseVisualStyleBackColor = true;
@@ -160,7 +160,7 @@ namespace GeometricObjects {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(226, 159);
+			this->ClientSize = System::Drawing::Size(226, 158);
 			this->Controls->Add(this->label4);
 			this->Controls->Add(this->textBox4);
 			this->Controls->Add(this->textBox3);
@@ -221,6 +221,26 @@ private: System::Void RectangleForm_Load(System::Object^  sender, System::EventA
 				 label3->Text = "Ширина";
 				 label4->Text = "Высота";
 				 button1->Text = "Нарисовать";
+			 }
+			 if (view==1)
+			 {
+				 label1->Text = "Новая коорд. Х";
+				 label2->Text = "Новая коорд. Y";
+				 label3->Text = "Ширина";
+				 textBox3->Enabled = false;
+				 label4->Text = "Высота";
+				 textBox4->Enabled = false;
+				 button1->Text = "Переместить";
+			 }
+			 if (view==2)
+			 {
+				 label1->Text="Сместить X на";
+				 label2->Text="Сместить Y на";
+				 label3->Text = "Ширина";
+				 textBox3->Enabled = false;
+				 label4->Text = "Высота";
+				 textBox4->Enabled = false;
+				 button1->Text= "Сместить";
 			 }
 		 }
 };
