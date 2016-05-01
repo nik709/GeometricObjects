@@ -45,6 +45,8 @@ namespace GeometricObjects {
 	private: System::Windows::Forms::ToolStripMenuItem^  ñìåñòèòüÃðóïïóToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ñêðûòüÃðóïïóToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ñêðûòüToolStripMenuItem2;
+	private: System::Windows::Forms::ToolStripMenuItem^  ïåðåìåñòèòüToolStripMenuItem2;
+	private: System::Windows::Forms::ToolStripMenuItem^  ñìåñòèòüToolStripMenuItem1;
 	private: System::Windows::Forms::ToolStripMenuItem^  íàðèñîâàòüToolStripMenuItem1;
 	public:
 		Form1(void)
@@ -110,11 +112,13 @@ namespace GeometricObjects {
 			this->ñìåñòèòüToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ïðÿìîóãîëüíèêToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->íàðèñToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ñêðûòüToolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ïåðåìåñòèòüToolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->íàðèñîâàòüToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ñìåñòèòüÃðóïïóToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ñêðûòüÃðóïïóToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->ñêðûòüToolStripMenuItem2 = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->ñìåñòèòüToolStripMenuItem1 = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -202,8 +206,8 @@ namespace GeometricObjects {
 			// 
 			// ïðÿìîóãîëüíèêToolStripMenuItem
 			// 
-			this->ïðÿìîóãîëüíèêToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->íàðèñToolStripMenuItem1, 
-				this->ñêðûòüToolStripMenuItem2});
+			this->ïðÿìîóãîëüíèêToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->íàðèñToolStripMenuItem1, 
+				this->ñêðûòüToolStripMenuItem2, this->ïåðåìåñòèòüToolStripMenuItem2, this->ñìåñòèòüToolStripMenuItem1});
 			this->ïðÿìîóãîëüíèêToolStripMenuItem->Name = L"ïðÿìîóãîëüíèêToolStripMenuItem";
 			this->ïðÿìîóãîëüíèêToolStripMenuItem->Size = System::Drawing::Size(108, 20);
 			this->ïðÿìîóãîëüíèêToolStripMenuItem->Text = L"Ïðÿìîóãîëüíèê";
@@ -214,6 +218,20 @@ namespace GeometricObjects {
 			this->íàðèñToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
 			this->íàðèñToolStripMenuItem1->Text = L"Íàðèñîâàòü";
 			this->íàðèñToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::íàðèñîâàòüToolStripMenuItem1_Click);
+			// 
+			// ñêðûòüToolStripMenuItem2
+			// 
+			this->ñêðûòüToolStripMenuItem2->Name = L"ñêðûòüToolStripMenuItem2";
+			this->ñêðûòüToolStripMenuItem2->Size = System::Drawing::Size(152, 22);
+			this->ñêðûòüToolStripMenuItem2->Text = L"Ñêðûòü";
+			this->ñêðûòüToolStripMenuItem2->Click += gcnew System::EventHandler(this, &Form1::ñêðûòüToolStripMenuItem2_Click);
+			// 
+			// ïåðåìåñòèòüToolStripMenuItem2
+			// 
+			this->ïåðåìåñòèòüToolStripMenuItem2->Name = L"ïåðåìåñòèòüToolStripMenuItem2";
+			this->ïåðåìåñòèòüToolStripMenuItem2->Size = System::Drawing::Size(152, 22);
+			this->ïåðåìåñòèòüToolStripMenuItem2->Text = L"Ïåðåìåñòèòü";
+			this->ïåðåìåñòèòüToolStripMenuItem2->Click += gcnew System::EventHandler(this, &Form1::ïåðåìåñòèòüToolStripMenuItem2_Click);
 			// 
 			// newToolStripMenuItem
 			// 
@@ -244,12 +262,12 @@ namespace GeometricObjects {
 			this->ñêðûòüÃðóïïóToolStripMenuItem->Text = L"Ñêðûòü ãðóïïó";
 			this->ñêðûòüÃðóïïóToolStripMenuItem->Click += gcnew System::EventHandler(this, &Form1::ñêðûòüÃðóïïóToolStripMenuItem_Click);
 			// 
-			// ñêðûòüToolStripMenuItem2
+			// ñìåñòèòüToolStripMenuItem1
 			// 
-			this->ñêðûòüToolStripMenuItem2->Name = L"ñêðûòüToolStripMenuItem2";
-			this->ñêðûòüToolStripMenuItem2->Size = System::Drawing::Size(152, 22);
-			this->ñêðûòüToolStripMenuItem2->Text = L"Ñêðûòü";
-			this->ñêðûòüToolStripMenuItem2->Click += gcnew System::EventHandler(this, &Form1::ñêðûòüToolStripMenuItem2_Click);
+			this->ñìåñòèòüToolStripMenuItem1->Name = L"ñìåñòèòüToolStripMenuItem1";
+			this->ñìåñòèòüToolStripMenuItem1->Size = System::Drawing::Size(152, 22);
+			this->ñìåñòèòüToolStripMenuItem1->Text = L"Ñìåñòèòü";
+			this->ñìåñòèòüToolStripMenuItem1->Click += gcnew System::EventHandler(this, &Form1::ñìåñòèòüToolStripMenuItem1_Click);
 			// 
 			// Form1
 			// 
@@ -361,6 +379,20 @@ private: System::Void ñêðûòüToolStripMenuItem2_Click(System::Object^  sender, Sy
 			 gr=this->CreateGraphics();
 			 rectangle->Hide(gr);
 		 }
+private: System::Void ïåðåìåñòèòüToolStripMenuItem2_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 gr=this->CreateGraphics();
+			 RF->view = 1;
+			 RF->ShowDialog();
+			 rectangle->MoveTo(gr, RF->koordX, RF->koordY);
+		 }
+private: System::Void ñìåñòèòüToolStripMenuItem1_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 gr=this->CreateGraphics();
+			 RF->view = 2;
+			 RF->ShowDialog();
+			 rectangle->Move(gr, RF->koordX, RF->koordY);
+		 }
 		 //-------------------------------------------------------------------------------
 private: System::Void íàðèñîâàòüToolStripMenuItem1_Click_1(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -385,7 +417,6 @@ private: System::Void ñêðûòüÃðóïïóToolStripMenuItem_Click(System::Object^  sende
 			 gr=this->CreateGraphics();
 			 group->Hide(gr);
 		 }
-
 };
 }
 
