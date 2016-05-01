@@ -188,13 +188,53 @@ namespace GeometricObjects
 
 
 	//----------------------------------------------------------------------------
+	class TLine: public TPoint
+	{
+	protected:
+		int x2, y2;
+	public:
+		TLine (int _x1, int _y1, int _x2, int _y2) : TPoint(_x1,_y1)
+		{
+			x2=_x2;
+			y2=_y2;
+		}
+		virtual void Draw(Graphics^ gr)
+		{
+			gr->DrawLine(Pens::Black, x, y, x2, y2);
+			Active = true;
+			Visible = true;
+		}
+		virtual void Hide(Graphics^ gr)
+		{
+			gr->DrawLine(Pens::White, x, y, x2, y2);
+			Visible = false;
+		}
+		virtual void MoveTo(Graphics^ gr, int _x2, int _y2)
+		{
+			Hide(gr);
+			x = _x2;
+			y = _y2;
+			x2 += (_x2 - x);
+			y2 += (_y2 - y);
+			Draw(gr);
+		}
+		virtual void Move(Graphics^ gr, int _x, int _y)
+		{
+			Hide(gr);
+			x += _x;
+			y += _y;
+			x2 += _x;
+			y2 += _y;
+			Draw(gr);
+		}
+	};
+	//----------------------------------------------------------------------------
 	class TChart;
 	struct TChartLine
 	{
 		TChart *pLine;
 		TPoint *pFp, *pLp;
 	};
-	//----------------------------------------------------------------------------
 	class TChart : public TObject
 	{
 	protected:
@@ -278,5 +318,8 @@ namespace GeometricObjects
 				}
 			}
 		}
+		virtual void Hide(Graphics ^gr){}
+		virtual void MoveTo(Graphics ^gr, int _x, int _y) {}
+		virtual void Move(Graphics ^gr, int x, int y) {}
 	};
 }

@@ -64,11 +64,12 @@ namespace GeometricObjects {
 		static TObject *point = new TPoint(0,0);
 		static TObject *circle = new TCircle(0,0,0);
 		static TObject *rectangle = new TRectangle(0,0,0,0);
+		static TObject *line = new TLine(0,0,0,0);
 		static TGroup *group = new TGroup();
+		static TChart *chart = new TChart((TPoint*)point,(TPoint*)point);
 		static RectangleForm ^RF = gcnew RectangleForm();
 		static bool ActiveGroup = false;
 	private: System::Windows::Forms::ToolStripMenuItem^  îòðèñîâêàToolStripMenuItem;
-	protected: 
 	private: System::Windows::Forms::ToolStripMenuItem^  òî÷êàToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ñêðûòüToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  ïåðåìåñòèòüToolStripMenuItem;
@@ -299,6 +300,9 @@ namespace GeometricObjects {
 			 {
 				 xEnd=e->X;
 				 yEnd=e->Y;
+				 line = new TLine (xBegin, yBegin, xEnd, yEnd);
+				 if (ActiveGroup)
+					 group->AddObject(line);
 				 gr=this->CreateGraphics();
 				 gr->DrawLine(Pens::Black, xBegin,yBegin,xEnd,yEnd);
 			 }
