@@ -1,6 +1,7 @@
 #pragma once
 
 #include "THeadList.h"
+#include "TStack.h"
 namespace GeometricObjects 
 {
 
@@ -64,6 +65,9 @@ namespace GeometricObjects
 			y+=_y;
 			Draw(gr);
 		}
+
+		int GetX() {return x;}
+		int GetY() {return y;}
 	};
 
 	//----------------------------------------------------------------------------
@@ -179,6 +183,68 @@ namespace GeometricObjects
 		void AddObject(TObject *object)
 		{
 			list.InsLast(object);
+		}
+	};
+	//----------------------------------------------------------------------------
+	class TLine : public TPoint
+	{
+	protected:
+		int x2, y2;
+	public:
+		TLine(int _x, int _y, int _x2, int _y2) : TPoint(_x, _y)
+		{
+			x2=_x2;
+			y2=_y2;
+		}
+		virtual void Draw(Graphics ^gr)
+		{
+			gr->DrawLine(Pens::Black, x, y, x2, y2);
+		}
+		virtual void Hide(Graphics ^gr) {}
+		virtual void MoveTo(Graphics ^gr, int _x, int _y) {}
+		virtual void Move(Graphics ^gr, int _x, int _y) {}
+	};
+	class TChart: public TObject
+	{
+	protected:
+		struct TChartLine
+		{
+			TChart *pLine;
+			TPoint *pFp, *pLp;
+		};
+		TObject *begin, *end;
+		Tstack <TChartLine> st;
+	public:
+		TChart(int x1, int y1, int x2, int y2)
+		{
+			TObject *point1 = new TPoint(x1,y1);
+			TObject *point2 = new TPoint(x2,y2);
+			SetFirst(point1);
+			SetLast(point2);
+		}
+		void SetFirst(TObject *obj) {begin=obj;}
+		void SetLast(TObject *obj) {end=obj;}
+
+		virtual void Draw(Graphics ^gr) {}
+		virtual void Hide(Graphics ^gr) {}
+		virtual void MoveTo(Graphics ^gr, int _x, int _y) {}
+		virtual void Move(Graphics ^gr, int x, int y) {}
+
+		TObject *GetFirst() {return begin;}
+		TObject *GetLast() {return end;}
+
+		TObject *DrawRec(Graphics ^gr, TObject *t)
+		{
+			TPoint *pFp, *pLp;
+			TChart *currLine;
+			if (dynamic_cast<TPoint*>(t))
+				return t;
+			currLine = dynamic_cast<TChart*>(t);
+			pFp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->GetFirst()));
+			pLp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->GetLast()));
+			if ((pFp != NULL) && (pLp != NULL))
+				gr->DrawLine(Pens::Black, pFp->GetX(), pFp->GetY(), pLp->GetX(), pLp->GetY());
+			return pLp;
 		}
 	};
 }

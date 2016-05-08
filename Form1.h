@@ -65,6 +65,8 @@ namespace GeometricObjects {
 		static TObject *circle = new TCircle(0,0,0);
 		static TObject *rectangle = new TRectangle(0,0,0,0);
 		static TGroup *group = new TGroup();
+		static TLine *line = new TLine(0,0,0,0);
+		static TChart *chart = new TChart(0,0,0,0);
 		static RectangleForm ^RF = gcnew RectangleForm();
 		static bool ActiveGroup = false;
 	private: System::Windows::Forms::ToolStripMenuItem^  îòğèñîâêàToolStripMenuItem;
@@ -297,10 +299,11 @@ namespace GeometricObjects {
 			 }
 	private: System::Void Form1_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) 
 			 {
-				 xEnd=e->X;
-				 yEnd=e->Y;
 				 gr=this->CreateGraphics();
-				 gr->DrawLine(Pens::Black, xBegin,yBegin,xEnd,yEnd);
+				 chart = new TChart(50,50, 100,50);
+				 line = new TLine (100, 50, 100, 100);
+				 chart->SetLast(line);
+				 chart->DrawRec(gr, chart);
 			 }
 	private: System::Void òî÷êàToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
 			 {
