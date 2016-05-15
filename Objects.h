@@ -2,6 +2,7 @@
 
 #include "THeadList.h"
 #include "TStack.h"
+#include <cmath>
 namespace GeometricObjects 
 {
 
@@ -14,7 +15,7 @@ namespace GeometricObjects
 	//----------------------------------------------------------------------------
 	class TObject
 	{
-	protected:
+	public:
 		bool Visible;
 		bool Active;
 	public:
@@ -30,11 +31,11 @@ namespace GeometricObjects
 	//----------------------------------------------------------------------------
 	class TPoint: public TObject
 	{
-	protected:
+	public:
 		int x;
 		int y;
 	public:
-		TPoint(int _x, int _y)
+		TPoint(int _x=0, int _y=0)
 		{
 			x=_x;
 			y=_y;
@@ -188,11 +189,13 @@ namespace GeometricObjects
 	//----------------------------------------------------------------------------
 	class TLine : public TPoint
 	{
-	protected:
+	public:
 		int x2, y2;
 	public:
-		TLine(int _x, int _y, int _x2, int _y2) : TPoint(_x, _y)
+		TLine(int _x=0, int _y=0, int _x2=0, int _y2=0)
 		{
+			x = _x;
+			y = _y;
 			x2=_x2;
 			y2=_y2;
 		}
@@ -204,47 +207,164 @@ namespace GeometricObjects
 		virtual void MoveTo(Graphics ^gr, int _x, int _y) {}
 		virtual void Move(Graphics ^gr, int _x, int _y) {}
 	};
-	class TChart: public TObject
+
+	//----------------------------------------------------------------------------
+	class TChart : public TObject
 	{
-	protected:
-		struct TChartLine
-		{
-			TChart *pLine;
-			TPoint *pFp, *pLp;
-		};
-		TObject *begin, *end;
-		Tstack <TChartLine> st;
 	public:
-		TChart(int x1, int y1, int x2, int y2)
+		TObject* begin;
+		TObject *end;
+		bool isVisitedB;
+		bool isVisitedE;
+	public:
+		TChart()
 		{
-			TObject *point1 = new TPoint(x1,y1);
-			TObject *point2 = new TPoint(x2,y2);
-			SetFirst(point1);
-			SetLast(point2);
+			begin = NULL;
+			end = NULL;
+			isVisitedB = false;
+			isVisitedE = false;
 		}
-		void SetFirst(TObject *obj) {begin=obj;}
-		void SetLast(TObject *obj) {end=obj;}
-
-		virtual void Draw(Graphics ^gr) {}
-		virtual void Hide(Graphics ^gr) {}
-		virtual void MoveTo(Graphics ^gr, int _x, int _y) {}
-		virtual void Move(Graphics ^gr, int x, int y) {}
-
-		TObject *GetFirst() {return begin;}
-		TObject *GetLast() {return end;}
-
+		void SetFirst(TObject *p) { begin = p; }
+		void SetLast(TObject *p) { end = p; }
+		virtual void Draw(Graphics ^gr){}
+		virtual void Hide(Graphics ^gr){}
+		virtual void MoveTo(Graphics ^gr, int _x, int _y){}
+		virtual void Move(Graphics ^gr, int x, int y){}
 		TObject *DrawRec(Graphics ^gr, TObject *t)
 		{
-			TPoint *pFp, *pLp;
 			TChart *currLine;
+			TPoint *pFp, *pLp;
 			if (dynamic_cast<TPoint*>(t))
 				return t;
-			currLine = dynamic_cast<TChart*>(t);
-			pFp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->GetFirst()));
-			pLp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->GetLast()));
-			if ((pFp != NULL) && (pLp != NULL))
-				gr->DrawLine(Pens::Black, pFp->GetX(), pFp->GetY(), pLp->GetX(), pLp->GetY());
-			return pLp;
+			else
+			{
+				currLine = dynamic_cast<TChart*>(t);
+				pFp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->begin));
+				pLp = dynamic_cast<TPoint*>(DrawRec(gr, currLine->end));
+				if (pFp && pLp)
+				{
+					gr->DrawLine(Pens::LightGreen, pFp->x, pFp->y, pLp->x, pLp->y);
+					return pFp;
+				}
+			}
+		}
+		void FindClosest(int x1, int y1, int x2, int y2)
+		{
+			bool insBegin = true;
+			bool isEnd = true;
+			Tstack <TChart*> st;
+			st.clear();
+			TChart *curr = this;
+			st.Push(curr);
+			bool isFirstPoint = true;
+			TPoint *min;
+			double distMIN;
+			while (!st.IsEmpty())
+			{
+				TChart *tmp = st.Top();
+				if (dynamic_cast<TChart*>(tmp->begin))
+					st.Push(dynamic_cast<TChart*>(tmp->begin));
+				if (dynamic_cast<TChart*>(tmp->end))
+					st.Push(dynamic_cast<TChart*>(tmp->end));
+				if (dynamic_cast<TPoint*>(tmp->begin))
+				{
+					tmp->isVisitedB = true;
+					if (isFirstPoint)
+					{
+						min = dynamic_cast<TPoint*>(tmp->begin);
+						distMIN = (min->x - x1)*(min->x - x1) + (min->y - y1)*(min->y - y1);
+						distMIN = sqrt(distMIN);
+						isFirstPoint = false;
+					}
+					TPoint *minTMP = dynamic_cast<TPoint*>(tmp->begin);
+					double distTMP = (minTMP->x - x1)*(minTMP->x - x1) + (minTMP->y - y1)*(minTMP->y - y1);
+					distTMP = sqrt(distTMP);
+					if (distTMP<=distMIN)
+					{
+						distMIN = distTMP;
+						min = minTMP;
+						curr = tmp;
+						isEnd = false;
+						insBegin = true;
+					}
+					double distTMPE = (minTMP->x - x2)*(minTMP->x - x2) + (minTMP->y - y2)*(minTMP->y - y2);
+					distTMPE = sqrt(distTMPE);
+					if (distTMPE<=distMIN)
+					{
+						distMIN = distTMPE;
+						min = minTMP;
+						curr = tmp;
+						isEnd = false;
+						insBegin = false;
+					}
+				}
+				if (dynamic_cast<TPoint*>(tmp->end))
+				{
+					tmp->isVisitedE = true;
+					if (isFirstPoint)
+					{
+						min = dynamic_cast<TPoint*>(tmp->end);
+						distMIN = (min->x - x1)*(min->x - x1) + (min->y - y1)*(min->y - y1);
+						isFirstPoint = false;
+						distMIN = sqrt(distMIN);
+					}
+					TPoint *minTMP = dynamic_cast<TPoint*>(tmp->end);
+					double distTMP = (minTMP->x - x1)*(minTMP->x - x1) + (minTMP->y - y1)*(minTMP->y - y1);
+					distTMP = sqrt(distTMP);
+					if (distTMP<=distMIN)
+					{
+						distMIN = distTMP;
+						min = minTMP;
+						curr = tmp;
+						isEnd = true;
+						insBegin = true;
+					}
+					double distTMPE = (minTMP->x - x2)*(minTMP->x - x2) + (minTMP->y - y2)*(minTMP->y - y2);
+					distTMPE = sqrt(distTMPE);
+					if (distTMPE<=distMIN)
+					{
+						distMIN = distTMPE;
+						min = minTMP;
+						curr = tmp;
+						isEnd = true;
+						insBegin = false;
+					}
+				}
+			}
+			if (insBegin)
+			{
+				if (!isEnd)
+				{
+					TChart *ins = new TChart();
+					ins->begin = new TPoint(min->x,min->y);
+					ins->end = new TPoint(x2,y2);
+					curr->SetFirst(ins);
+				}
+				if (isEnd)
+				{
+					TChart *ins = new TChart();
+					ins->begin = new TPoint(min->x,min->y);
+					ins->end = new TPoint(x2,y2);
+					curr->SetLast(ins);
+				}
+			}
+			if (!insBegin)
+			{
+				if (!isEnd)
+				{
+					TChart *ins = new TChart();
+					ins->begin = new TPoint(min->x, min->y);
+					ins->end = new TPoint(x1, y1);
+					curr->SetFirst(ins);
+				}
+				if (isEnd)
+				{
+					TChart *ins = new TChart();
+					ins->begin = new TPoint(min->x, min->y);
+					ins->end = new TPoint(x1, y1);
+					curr->SetLast(ins);
+				}
+			}
 		}
 	};
 }

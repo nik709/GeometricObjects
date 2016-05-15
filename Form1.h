@@ -4,6 +4,7 @@
 #include "dialog.h"
 #include "CircleDialog.h"
 #include "RectangleForm.h"
+#include "cmath"
 
 namespace GeometricObjects {
 
@@ -26,7 +27,7 @@ namespace GeometricObjects {
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
 	public:
-		
+		TChart *chart;
 		static dialog ^F2 = gcnew dialog();
 		
 	private: System::Windows::Forms::ToolStripMenuItem^  окружностьToolStripMenuItem;
@@ -52,21 +53,18 @@ namespace GeometricObjects {
 		Form1(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			chart = new TChart;
 		}
 
 	protected:
 		int xBegin, yBegin;
 		int xEnd, yEnd;
 		Graphics ^gr;
-		static TObject *point = new TPoint(0,0);
+		static TObject *point = new TPoint();
 		static TObject *circle = new TCircle(0,0,0);
 		static TObject *rectangle = new TRectangle(0,0,0,0);
 		static TGroup *group = new TGroup();
-		static TLine *line = new TLine(0,0,0,0);
-		static TChart *chart = new TChart(0,0,0,0);
+		static TObject *line = new TLine();
 		static RectangleForm ^RF = gcnew RectangleForm();
 		static bool ActiveGroup = false;
 	private: System::Windows::Forms::ToolStripMenuItem^  отрисовкаToolStripMenuItem;
@@ -300,9 +298,20 @@ namespace GeometricObjects {
 	private: System::Void Form1_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) 
 			 {
 				 gr=this->CreateGraphics();
-				 chart = new TChart(50,50, 100,50);
-				 line = new TLine (100, 50, 100, 100);
-				 chart->SetLast(line);
+				 xEnd=e->X;
+				 yEnd=e->Y;
+				 TChart *tmp = new TChart();
+				 tmp->begin = new TPoint(xBegin, yBegin);
+				 tmp->end = new TPoint(xEnd, yEnd);
+				 if (chart->begin == NULL && chart->end==NULL)
+				 {
+					 chart->begin = new TPoint(xBegin, yBegin);
+					 chart->end = new TPoint(xEnd, yEnd);
+				 }
+				 else
+				 {
+					 chart->FindClosest(xBegin,yBegin,xEnd,yEnd);
+				 }
 				 chart->DrawRec(gr, chart);
 			 }
 	private: System::Void точкаToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) 
